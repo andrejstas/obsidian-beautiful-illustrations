@@ -1,12 +1,22 @@
 import { App, Plugin, PluginManifest, Menu, Editor } from 'obsidian';
+import { BeautifulIllustrationsSettingTab } from './settings-tab';
+import { BeautifulIllustrationsSettings, DEFAULT_SETTINGS } from './settings';
 
 export default class BeautifulIllustrationsPlugin extends Plugin {
+    settings: BeautifulIllustrationsSettings;
+
     constructor(app: App, manifest: PluginManifest) {
         super(app, manifest);
     }
 
     async onload() {
         console.log('Loading Beautiful Illustrations plugin');
+
+        // Load settings
+        await this.loadSettings();
+
+        // Add settings tab
+        this.addSettingTab(new BeautifulIllustrationsSettingTab(this.app, this));
 
         // Add a ribbon icon
         this.addRibbonIcon('image', 'Add Illustration', () => {
@@ -31,6 +41,14 @@ export default class BeautifulIllustrationsPlugin extends Plugin {
                 }
             })
         );
+    }
+
+    async loadSettings() {
+        this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    }
+
+    async saveSettings() {
+        await this.saveData(this.settings);
     }
 
     onunload() {
