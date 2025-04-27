@@ -1,6 +1,8 @@
 import esbuild from 'esbuild';
 import process from 'process';
 import builtins from 'builtin-modules';
+import fs from 'fs';
+import path from 'path';
 
 const banner =
     `/*
@@ -10,6 +12,12 @@ if you want to view the source, please visit the github repository of this plugi
 `;
 
 const prod = process.argv[2] === 'production';
+const outDir = 'build/obsidian-beautiful-illustrations';
+
+// Ensure build directory exists
+if (!fs.existsSync(outDir)) {
+    fs.mkdirSync(outDir);
+}
 
 const buildOptions = {
     banner: {
@@ -38,11 +46,18 @@ const buildOptions = {
     logLevel: 'info',
     sourcemap: prod ? false : 'inline',
     treeShaking: true,
-    outfile: 'main.js',
+    outfile: path.join(outDir, 'main.js'),
+};
+
+// Function to copy manifest.json
+const copyManifest = () => {
+    fs.copyFileSync('manifest.json', path.join(outDir, 'manifest.json'));
+    console.log('Copied manifest.json to build directory');
 };
 
 if (prod) {
     await esbuild.build(buildOptions);
+    copyManifest();
     process.exit(0);
 } else {
     const ctx = await esbuild.build({
@@ -50,8 +65,13 @@ if (prod) {
         watch: {
             onRebuild(error) {
                 if (error) console.error('watch build failed:', error);
-                else console.log('watch build succeeded');
+                else {
+                    console.log('watch build succeeded');
+                    copyManifest();
+                }
             },
         },
     });
+    // Initial copy of manifest
+    copyManifest();
 } 
