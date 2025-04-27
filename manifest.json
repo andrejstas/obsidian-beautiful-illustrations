@@ -1,0 +1,10 @@
+{
+    "id": "obsidian-beautiful-illustrations",
+    "name": "Beautiful Illustrations",
+    "version": "0.0.1",
+    "minAppVersion": "0.15.0",
+    "description": "Add beautiful illustrations to your Obsidian notes",
+    "author": "",
+    "authorUrl": "",
+    "isDesktopOnly": false
+}
