@@ -1,6 +1,5 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import BeautifulIllustrationsPlugin from './main';
-import { BeautifulIllustrationsSettings } from './settings';
 
 export class BeautifulIllustrationsSettingTab extends PluginSettingTab {
     plugin: BeautifulIllustrationsPlugin;

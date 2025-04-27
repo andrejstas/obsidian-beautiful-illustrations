@@ -1,6 +1,9 @@
-import { App, Plugin, PluginManifest, Menu, Editor } from 'obsidian';
+import { App, Plugin, PluginManifest, Menu, Editor, Notice } from 'obsidian';
 import { BeautifulIllustrationsSettingTab } from './settings-tab';
 import { BeautifulIllustrationsSettings, DEFAULT_SETTINGS } from './settings';
+import { generateIllustration } from './utils';
+import { saveBase64ImageAndInsert } from './image-handler';
+import { connect } from 'http2';
 
 export default class BeautifulIllustrationsPlugin extends Plugin {
     settings: BeautifulIllustrationsSettings;
@@ -34,8 +37,37 @@ export default class BeautifulIllustrationsPlugin extends Plugin {
                             .setTitle('Create illustration')
                             .setIcon('image')
                             .onClick(async () => {
-                                // Here we'll implement the illustration creation logic
-                                console.log('Creating illustration from text:', selection);
+                                const notice = new Notice('Generating illustration...', 0);
+
+                                console.log('this.settings.openaiApiKey', this.settings.openaiApiKey)
+                                console.log('this.settings.customPrompt', this.settings.customPrompt)
+                                console.log('selection', selection)
+
+
+                                try {
+                                    const result = await generateIllustration(
+                                        this.settings.openaiApiKey,
+                                        this.settings.customPrompt,
+                                        selection,
+                                        (message) => notice.setMessage(message)
+                                    );
+
+
+
+                                    if (result) {
+                                        await saveBase64ImageAndInsert(
+                                            this.app.vault,
+                                            result.imageBase64,
+                                            editor
+                                        );
+                                        notice.setMessage('Illustration created successfully!');
+                                        setTimeout(() => notice.hide(), 2000);
+                                    }
+                                } catch (error) {
+                                    console.error('Error in illustration creation:', error);
+                                    notice.setMessage('Failed to create illustration. Please try again.');
+                                    setTimeout(() => notice.hide(), 5000);
+                                }
                             });
                     });
                 }
