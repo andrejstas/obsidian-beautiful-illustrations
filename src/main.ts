@@ -1,4 +1,4 @@
-import { App, Plugin, PluginManifest } from 'obsidian';
+import { App, Plugin, PluginManifest, Menu, Editor } from 'obsidian';
 
 export default class BeautifulIllustrationsPlugin extends Plugin {
     constructor(app: App, manifest: PluginManifest) {
@@ -13,6 +13,24 @@ export default class BeautifulIllustrationsPlugin extends Plugin {
             // This will be implemented later
             console.log('Add illustration clicked');
         });
+
+        // Register the context menu
+        this.registerEvent(
+            this.app.workspace.on('editor-menu', (menu: Menu, editor: Editor) => {
+                const selection = editor.getSelection();
+                if (selection) {
+                    menu.addItem((item) => {
+                        item
+                            .setTitle('Create illustration')
+                            .setIcon('image')
+                            .onClick(async () => {
+                                // Here we'll implement the illustration creation logic
+                                console.log('Creating illustration from text:', selection);
+                            });
+                    });
+                }
+            })
+        );
     }
 
     onunload() {
