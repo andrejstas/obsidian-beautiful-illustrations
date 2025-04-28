@@ -1,4 +1,4 @@
-import { Notice, TFile, Vault } from 'obsidian';
+import { Notice, Vault } from 'obsidian';
 
 export async function saveBase64ImageAndInsert(
     vault: Vault,
@@ -15,7 +15,7 @@ export async function saveBase64ImageAndInsert(
         await vault.createBinary(filename, imageBytes);
 
         // Insert the image markdown at the beginning of the selected text
-        const imageMarkdown = `![[${filename}]]\n\n`;
+        const imageMarkdown = `![[${filename}#left|300]]`;
         const cursor = editor.getCursor();
         editor.replaceRange(imageMarkdown, cursor, cursor);
         return filename;

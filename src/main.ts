@@ -3,7 +3,6 @@ import { BeautifulIllustrationsSettingTab } from './settings-tab';
 import { BeautifulIllustrationsSettings, DEFAULT_SETTINGS } from './settings';
 import { generateIllustration } from './utils';
 import { saveBase64ImageAndInsert } from './image-handler';
-import { connect } from 'http2';
 
 export default class BeautifulIllustrationsPlugin extends Plugin {
     settings: BeautifulIllustrationsSettings;
