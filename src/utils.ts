@@ -52,8 +52,6 @@ export async function generateIllustration(
             prompt: fullPrompt,
             n: 1,
             size: "1024x1024",
-            // quality: "standard",
-            // response_format: "b64_json"
         });
 
         if (!response.data || !response.data[0]?.b64_json) {
@@ -69,4 +67,9 @@ export async function generateIllustration(
         new Notice('Failed to generate illustration. Please check your API key and try again.');
         return null;
     }
+}
+
+export function truncateText(text: string, maxLength: number): string {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + '...';
 } 
